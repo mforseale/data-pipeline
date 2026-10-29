@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.runtime/
+*.log
+*.db
+*.db-*
+*.sqlite*
+.env
+
+# Local environment and private runtime data
+.env.*
+!.env.example
+.jupyter/
+.ipynb_checkpoints/

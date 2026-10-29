@@ -1,0 +1,8 @@
+ingest_id,customer_id,reason,is_demo
+64006,,invalid_customer_id,True
+64007,64001,invalid_spend,True
+64008,64002,invalid_spend,True
+64009,64003,invalid_visit,True
+64010,64004,invalid_segment,True
+64011,64005,"inconsistent_purchase,purchase_without_visit",True
+64012,64006,invalid_recency,True

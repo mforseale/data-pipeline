@@ -1,0 +1,75 @@
+{
+  "snapshot_date": "2026-10-28",
+  "spark_version": "4.2.0",
+  "counts": {
+    "raw": 64012,
+    "rejected": 7,
+    "clean": 64000,
+    "duplicates": 5
+  },
+  "source_sha256": "0e5893329d8b93cefecc571777672028290ab69865718020c78c7284f291aece",
+  "idempotence": true,
+  "rollback_before_commit": true,
+  "csv_reconciliation": true,
+  "original_rows_rejected": 0,
+  "data_fingerprints": {
+    "customer_facts": {
+      "digest": "ac85ad213d7bbe103a37948c96a28853",
+      "rows": 64000
+    },
+    "experiment_metrics": {
+      "digest": "11c30c3fb1c2210fac053a6d850cfd71",
+      "rows": 3
+    },
+    "channel_metrics": {
+      "digest": "5db584d39e264e1f2a56bda034527e45",
+      "rows": 9
+    },
+    "quarantine": {
+      "digest": "1fcf8bceff1d71e63ad16a824e36886b",
+      "rows": 7
+    }
+  },
+  "success_run_ids": [
+    "4bcc5d1f5ba14d54a1502c808e50b31d",
+    "0140d8001cd34a2b8788136f3bfa2c76"
+  ],
+  "controlled_failure_run_id": "2a0486d5df644c9da67c3c31fa06215c",
+  "warehouse": {
+    "users": 64000,
+    "revenue_usd": "67258.13",
+    "buyers": 578
+  },
+  "airflow_run": {
+    "dag_id": "crm_daily_etl",
+    "run_id": "portfolio_check_13aa4ad4eb9c",
+    "status": "success",
+    "run_type": "manual",
+    "schedule_enabled": true,
+    "tasks": [
+      {
+        "task_id": "extract_source_bound",
+        "state": "success"
+      },
+      {
+        "task_id": "spark_transform_and_publish",
+        "state": "success"
+      },
+      {
+        "task_id": "check_warehouse",
+        "state": "success"
+      },
+      {
+        "task_id": "build_report",
+        "state": "success"
+      }
+    ]
+  },
+  "scheduled_runs": [
+    {
+      "run_id": "scheduled__2026-10-28T03:00:00+00:00",
+      "run_type": "scheduled",
+      "state": "success"
+    }
+  ]
+}

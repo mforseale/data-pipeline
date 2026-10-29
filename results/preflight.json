@@ -1,0 +1,9 @@
+{
+  "status": "preflight_only",
+  "source_sha256_verified": true,
+  "source_rows": 64000,
+  "python_syntax_files": 12,
+  "spark_executed": false,
+  "airflow_dag_executed": false,
+  "limitation": "These are static checks, not an ETL run or integration tests."
+}

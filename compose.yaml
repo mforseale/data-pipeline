@@ -1,0 +1,69 @@
+name: pets-data-pipeline
+services:
+  source-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: source
+      POSTGRES_USER: source_demo
+      POSTGRES_PASSWORD: source_demo
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - source-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U source_demo -d source"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  warehouse-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: warehouse
+      POSTGRES_USER: warehouse_demo
+      POSTGRES_PASSWORD: warehouse_demo
+    ports:
+      - "127.0.0.1:55433:5432"
+    volumes:
+      - warehouse-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U warehouse_demo -d warehouse"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  airflow:
+    build: .
+    image: pets-data-pipeline:local
+    command: standalone
+    working_dir: /opt/project
+    environment:
+      PYTHONPATH: /opt/project
+      SOURCE_DSN: postgresql://source_demo:source_demo@source-db:5432/source
+      WAREHOUSE_DSN: postgresql://warehouse_demo:warehouse_demo@warehouse-db:5432/warehouse
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/project/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "True"
+      AIRFLOW__CORE__PARALLELISM: "2"
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: "1"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: Asia/Tomsk
+      AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "15"
+    ports:
+      - "127.0.0.1:8085:8080"
+    volumes:
+      - .:/opt/project
+      - airflow-state:/opt/airflow
+    depends_on:
+      source-db:
+        condition: service_healthy
+      warehouse-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/api/v2/monitor/health >/dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
+volumes:
+  source-data:
+  warehouse-data:
+  airflow-state:
